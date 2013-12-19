@@ -1,0 +1,46 @@
+#!/bin/bash
+## Script to easily set iptables rules to block all traffic from a specific source address
+## Also supports unblocking previously blocked IP addresses
+## By: Matt Gehrisch
+## Version: .1
+##
+
+version=".1"
+
+if ( ! getopts ":vb:u:" opt); then
+      echo "Usage: ipblock (-bu) [IP Address]"
+fi
+
+while getopts ":vb:u:" arg; do
+  case $arg in
+    v)
+      echo "ipblock version $version"
+      ;;
+    b)
+      echo "Blocking address: $OPTARG"
+      /sbin/iptables -I INPUT -s $OPTARG -j DROP
+     if [[ $? = "0" ]]; then
+       echo "success!!"
+     else
+       echo "Failed!!"
+       exit 1
+     fi
+      ;;
+    u)
+     blockline=`/sbin/iptables -L INPUT -n --line-numbers | grep $OPTARG | awk '{print $1}'`
+      echo "Unblocking IP address: $OPTARG"
+      /sbin/iptables -D INPUT $blockline 
+     if [[ $? = "0" ]]; then
+       echo "success!!"
+     else
+       echo "Failed!!"
+       exit 1
+     fi
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      exit 1
+      ;;
+  esac
+done
+

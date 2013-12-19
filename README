@@ -1,0 +1,13 @@
+Script to easily block and unblock an IP address via iptables.
+Author: Matt Gehrisch
+Author Email: matt@gehrisch.us
+
+To block an IP address (192.168.1.100):
+ipblock -b 192.168.1.100
+
+To unblock the IP address (192.168.1.100):
+ipblock -u 192.168.1.100
+
+Modifying iptables rules requires root privileges.  Use sudo (or root if you must).
+
+Tested on: Ubuntu 12.04 and CentOS 6.4
